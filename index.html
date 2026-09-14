@@ -1,85 +1,27 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>THE LAST CITY — You vs AI</title>
-<style>
-:root{--bg:#080b10;--panel:#111722;--panel2:#171f2c;--text:#eef2f7;--muted:#8d9aaa;--accent:#7dd3fc;--danger:#fb7185;--good:#86efac;--gold:#facc15}
-*{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#172132 0,#080b10 55%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh}
-.wrap{max-width:720px;margin:auto;padding:18px 14px 34px}.title{font-size:28px;font-weight:900;letter-spacing:.04em}.sub{color:var(--muted);margin:2px 0 16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.card{background:rgba(17,23,34,.94);border:1px solid #273244;border-radius:16px;padding:13px}.label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.big{font-size:22px;font-weight:800;margin-top:3px}
-.hp{height:8px;background:#26303d;border-radius:99px;overflow:hidden;margin-top:7px}.hp>i{display:block;height:100%;background:var(--good);width:100%}
-.scene{margin-top:12px;background:linear-gradient(145deg,#151e2a,#0e141d);border:1px solid #2b3749;border-radius:18px;padding:16px}.scene h2{margin:0 0 7px}.scene p{line-height:1.5;color:#cbd5e1}
-.log{margin-top:12px;max-height:190px;overflow:auto;display:flex;flex-direction:column;gap:7px}.msg{padding:9px 11px;border-radius:12px;background:#111722;color:#cbd5e1;font-size:14px}.msg.you{border-left:3px solid var(--accent)}.msg.ai{border-left:3px solid #c084fc}.msg.system{border-left:3px solid var(--gold)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}button{border:1px solid #344154;background:#182130;color:var(--text);border-radius:14px;padding:13px 10px;font-size:15px;font-weight:750;min-height:52px}button:active{transform:scale(.98);background:#222e40}.danger{border-color:#713244}.gold{border-color:#66551c}
-.footer{display:flex;gap:8px;margin-top:12px}.footer button{flex:1;font-size:13px;min-height:42px;padding:9px}
-.badge{display:inline-block;padding:4px 8px;border-radius:99px;background:#172235;color:var(--accent);font-size:12px;font-weight:800}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="title">THE LAST CITY</div>
-  <div class="sub">A tiny survival game. <span class="badge">YOU vs AI</span></div>
-
-  <div class="grid">
-    <div class="card"><div class="label">Health</div><div class="big" id="hpText">10 / 10</div><div class="hp"><i id="hpBar"></i></div></div>
-    <div class="card"><div class="label">Day</div><div class="big" id="day">1</div></div>
-    <div class="card"><div class="label">Supplies</div><div class="big" id="supplies">3</div></div>
-    <div class="card"><div class="label">Trust</div><div class="big" id="trust">0</div></div>
-  </div>
-
-  <div class="scene">
-    <h2 id="location">🏙️ Downtown</h2>
-    <p id="story">The city went silent three days ago. Your radio picked up one repeating message: “If you can hear this, don't go to the tower.” A storm is moving in.</p>
-  </div>
-
-  <div class="log" id="log"></div>
-  <div class="actions" id="actions"></div>
-  <div class="footer">
-    <button onclick="newGame()">↻ New game</button>
-    <button onclick="aiHint()">🤖 Ask the AI</button>
-  </div>
-</div>
-
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>The Last City V2</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#080b10;color:#eef3fa;font-family:system-ui,-apple-system,sans-serif}.app{max-width:700px;margin:auto;padding:16px}.hud{position:sticky;top:0;background:#080b10ee;padding:10px 0;z-index:2}.row,.stats,.actions,.map{display:grid;gap:8px}.stats{grid-template-columns:repeat(4,1fr)}.stat,.panel,.place,button{background:#111a27;border:1px solid #2c3b50;border-radius:14px}.stat{padding:8px;text-align:center}.stat b{display:block;font-size:18px}.panel{padding:16px;margin:10px 0}.hero{min-height:210px;background:linear-gradient(#162840,#0e151f);display:flex;flex-direction:column;justify-content:flex-end}.muted{color:#91a0b5;font-size:12px;letter-spacing:.08em}.radio{border-left:3px solid #c084fc;padding:9px;background:#19182a;margin-top:10px}.actions,.map{grid-template-columns:1fr 1fr}button{color:#eef3fa;padding:12px;font-weight:700;font-size:14px}.place{padding:12px}.here{border-color:#7dd3fc}.locked{opacity:.35}.tabs{display:flex;gap:6px}.tabs button{flex:1}.entry{padding:8px;border-left:2px solid #64748b;margin:6px 0;background:#0d141e}.item{display:flex;justify-content:space-between;align-items:center;padding:9px;border-bottom:1px solid #263448}.overlay{position:fixed;inset:0;background:#05070bed;display:flex;align-items:center;justify-content:center;padding:20px;z-index:9}.hidden{display:none}.modal{max-width:480px;background:#111a27;border:1px solid #3b4d67;border-radius:18px;padding:20px}</style></head>
+<body><div class="app"><div class="hud"><b>THE LAST CITY <span style="color:#7dd3fc">V2</span></b><div class="stats"><div class="stat">❤️<b id="hp"></b></div><div class="stat">🍖<b id="food"></b></div><div class="stat">⚡<b id="energy"></b></div><div class="stat">🎒<b id="bag"></b></div></div></div>
+<div class="panel hero"><div class="muted" id="day"></div><h1 id="loc"></h1><p id="desc"></p><div class="radio" id="radio"></div></div>
+<div class="actions"><button onclick="searchArea()">🔎 Search Area</button><button onclick="investigate()">👁 Investigate</button><button onclick="rest()">💤 Rest</button><button onclick="askAI()">📻 Ask the Voice</button></div>
+<div class="tabs"><button onclick="tab='map';render()">🗺 World</button><button onclick="tab='bag';render()">🎒 Inventory</button><button onclick="tab='log';render()">📓 Journal</button></div><div class="panel" id="content"></div></div>
+<div id="enc" class="overlay hidden"><div class="modal"><div class="muted">ENCOUNTER</div><h2 id="enemy"></h2><p id="etext"></p><div class="actions"><button onclick="fight()">⚔️ Fight</button><button onclick="flee()">🏃 Run</button><button onclick="med()">🩹 Medkit</button><button onclick="hideEnemy()">🫥 Hide</button></div></div></div>
 <script>
-const S={hp:10,day:1,supplies:3,trust:0,loc:"Downtown",ended:false,turn:0};
-const scenes=[
- {name:"🏙️ Downtown",text:"The streets are empty. A pharmacy has its door half-open. Somewhere above you, glass breaks.",acts:[
-  ["🔍 Search pharmacy",()=>{S.supplies++; log("you","You search the pharmacy and find a sealed medical kit. +1 supply."); chance(.25,2,"A shelf collapses while you search.")}],
-  ["🚶 Head to tower",()=>{S.loc="Radio Tower"; S.day++; S.supplies--; log("you","You head toward the radio tower. -1 supply.");}],
-  ["🏚️ Barricade & rest",()=>{S.hp=Math.min(10,S.hp+2);S.day++;S.supplies--;log("you","You barricade a storefront and rest. +2 health, -1 supply.");}]
- ]},
- {name:"📡 Radio Tower",text:"The tower hums even though the grid is supposedly dead. Your radio suddenly speaks in your own voice.",acts:[
-  ["📻 Answer the radio",()=>{S.trust+=2;S.day++;log("you","You answer. Something on the other end knows your name. Trust +2.")}],
-  ["⬆️ Climb the tower",()=>{chance(.45,3,"A violent electrical surge throws you against the stairs.");S.day++;}],
-  ["🏃 Leave immediately",()=>{S.loc="Subway";S.day++;log("you","You leave the tower and descend into the subway.");}]
- ]},
- {name:"🚇 Subway",text:"Emergency lights flicker beneath the city. A stranger is sitting beside a dead train, holding a working flashlight.",acts:[
-  ["🤝 Talk to stranger",()=>{S.trust++;S.supplies++;log("you","The stranger gives you a ration and says: “The city isn't empty.” Trust +1, supply +1.")}],
-  ["🥷 Sneak past",()=>{S.day++;log("you","You avoid the stranger and slip deeper underground.")}],
-  ["⚔️ Threaten them",()=>{S.trust-=2;S.supplies+=2;log("you","You take their supplies. +2 supply, Trust -2.");}]
- ]}
-];
-function current(){return scenes.find(x=>x.name===S.loc)||scenes[0]}
-function log(who,text){let d=document.createElement("div");d.className="msg "+who;d.textContent=(who==="you"?"YOU: ":who==="ai"?"AI: ":"SYSTEM: ")+text;document.getElementById("log").prepend(d)}
-function chance(p,damage,msg){if(Math.random()<p){S.hp=Math.max(0,S.hp-damage);log("system",msg+" -"+damage+" health.")}}
-function render(){
- document.getElementById("hpText").textContent=S.hp+" / 10";document.getElementById("hpBar").style.width=(S.hp*10)+"%";
- document.getElementById("day").textContent=S.day;document.getElementById("supplies").textContent=S.supplies;document.getElementById("trust").textContent=S.trust;
- let c=current();document.getElementById("location").textContent=c.name;document.getElementById("story").textContent=c.text;
- let a=document.getElementById("actions");a.innerHTML="";
- c.acts.forEach(([label,fn],i)=>{let b=document.createElement("button");b.textContent=label;b.onclick=()=>{if(S.ended)return;fn();S.turn++;aiTurn();check();render()};a.appendChild(b)});
-}
-function aiTurn(){if(S.ended)return;if(Math.random()<.45){let lines=["The storm is getting closer.","I don't trust that tower.","Something is moving underground.","You have one advantage: nobody knows what you'll do next."];log("ai",lines[Math.floor(Math.random()*lines.length)])}}
-function aiHint(){let hints=S.hp<=4?"You need safety. Resting is probably smarter than exploring.":S.supplies<=1?"Supplies are getting low. Search for resources.":S.trust<0?"People may become a problem if you keep pushing them.":"I'd investigate the radio, but I wouldn't assume the voice is friendly.";log("ai",hints)}
-function check(){
- if(S.hp<=0){S.ended=true;document.getElementById("actions").innerHTML="";log("system","GAME OVER. The city wins this time. Tap New game to try again.");return}
- if(S.day>=7){S.ended=true;document.getElementById("actions").innerHTML="";let result=S.trust>=3?"You reach the evacuation signal—and the stranger recognizes you. You survived.":"You reach the edge of the city alone. You survived, but you still don't know what was speaking on the radio.";log("system","DAY 7 — "+result)}
- if(S.supplies<0)S.supplies=0;
-}
-function newGame(){Object.assign(S,{hp:10,day:1,supplies:3,trust:0,loc:"Downtown",ended:false,turn:0});document.getElementById("log").innerHTML="";log("system","New game started. Make your first move.");render()}
-log("system","I'm your AI game master. You can also ask me for a hint.");render();
-</script>
-</body>
-</html>
+const P={Downtown:["🏙️","Rain glitters on abandoned cars. The pharmacy door hangs open.",["Hospital","Subway"],["Canned Food","Bandage","Battery"]],Hospital:["🏥","Emergency lights pulse red. A trail leads toward Surgery.",["Downtown","Apartments"],["Medkit","Antibiotics","Canned Food"]],Subway:["🚇","A dead train blocks the platform. Footsteps echo below.",["Downtown","Police Station"],["Battery","Crowbar","Canned Food"]],Apartments:["🏚️","Someone wrote DON'T ANSWER THEM across the wall.",["Hospital","Radio Tower"],["Keycard","Canned Food","Medkit"]],"Police Station":["🚔","The security room still has power. A city map flickers.",["Subway","Radio Tower"],["Armor","Battery","Medkit"]],"Radio Tower":["📡","The tower hums. Your radio speaks before you touch it.",["Apartments","Police Station"],["Signal Core"]]};
+let S=JSON.parse(localStorage.getItem("tlcV2")||"null")||{hp:100,food:80,energy:85,day:1,hour:18,loc:"Downtown",inv:["Flashlight"],seen:["Downtown","Hospital","Subway"],log:["You woke Downtown. One message repeats: DON'T GO TO THE TOWER."],searched:{},trust:0},tab="map",foe=null;
+const save=()=>localStorage.setItem("tlcV2",JSON.stringify(S));function tick(h=1){S.hour+=h;S.energy=Math.max(0,S.energy-h*3);S.food=Math.max(0,S.food-h*2);if(S.hour>=24){S.hour-=24;S.day++}if(!S.food||!S.energy)S.hp-=4;save()}function note(x){S.log.unshift(x);save();render()}
+function move(x){if(!S.seen.includes(x)||x===S.loc)return;S.loc=x;tick();note("Traveled to "+x+".");if(Math.random()<.25)encounter()}
+function searchArea(){let n=S.searched[S.loc]||0;if(n>=2)return note("This area has been picked clean.");S.searched[S.loc]=n+1;tick();let a=P[S.loc][3],x=a[Math.floor(Math.random()*a.length)];if(S.inv.length<8){S.inv.push(x);note("Found "+x+".")}else note("Found "+x+", but your pack is full.");if(Math.random()<.3)encounter()}
+function investigate(){tick();let u=P[S.loc][2].filter(x=>!S.seen.includes(x));if(u.length){S.seen.push(u[0]);note("Discovered a route to "+u[0]+".")}else note(["Fresh footprints cross your path.","A radio repeats the numbers 3-1-7.","A locked door rattles, then goes silent.","Blue chalk marks a safe route."][Math.floor(Math.random()*4)])}
+function rest(){if(S.food<8)return note("You're too hungry to rest.");S.food-=8;S.energy=Math.min(100,S.energy+40);S.hp=Math.min(100,S.hp+8);tick(6);note("You barricaded a room and slept.");if(Math.random()<.15)encounter()}
+function askAI(){S.trust++;note(S.loc==="Radio Tower"?'VOICE: "The signal is not coming FROM the tower."':S.hp<40?'VOICE: "Find medicine. Now."':S.energy<30?'VOICE: "You are exhausted. Find shelter."':'VOICE: "'+["Someone else has a radio.","The tower gets louder after midnight.","You are being followed."][Math.floor(Math.random()*3)]+'"')}
+function encounter(){foe={name:["The Hollow","Tunnel Stalker","Lost Survivor"][Math.floor(Math.random()*3)],hp:30};enemy.textContent=foe.name;etext.textContent="Movement erupts nearby. Decide fast.";enc.classList.remove("hidden")}
+function fight(){foe.hp-=S.inv.includes("Crowbar")?18:10;S.hp-=5+Math.floor(Math.random()*9);tick();if(foe.hp<=0){enc.classList.add("hidden");note("You survived the encounter.")}else etext.textContent="It is still coming. Enemy health: "+foe.hp}
+function flee(){tick();if(Math.random()<.65){enc.classList.add("hidden");note("You escaped.")}else{S.hp-=12;etext.textContent="It catches you. -12 health."}}
+function med(){let i=S.inv.indexOf("Medkit");if(i<0)return etext.textContent="No Medkit.";S.inv.splice(i,1);S.hp=Math.min(100,S.hp+35);render()}function hideEnemy(){tick();if(Math.random()<.55){enc.classList.add("hidden");note("It passes without seeing you.")}else etext.textContent="It heard you."}
+function use(i){let x=S.inv[i];if(x==="Canned Food"){S.food=Math.min(100,S.food+30);S.inv.splice(i,1);note("Ate canned food.")}else if(x==="Medkit"||x==="Bandage"){S.hp=Math.min(100,S.hp+(x==="Medkit"?35:15));S.inv.splice(i,1);note("Used "+x+".")}else note(x+" may be useful later.")}
+function render(){hp.textContent=Math.max(0,S.hp);food.textContent=S.food;energy.textContent=S.energy;bag.textContent=S.inv.length+"/8";day.textContent="DAY "+S.day+" • "+String(S.hour).padStart(2,"0")+":00 • "+(S.hour<6||S.hour>=20?"NIGHT":"DAYLIGHT");loc.textContent=P[S.loc][0]+" "+S.loc;desc.textContent=P[S.loc][1];radio.textContent=S.loc==="Radio Tower"?'📻 “You’re standing directly above it.”':'📻 “If you can hear this, don’t go to the tower.”';
+if(tab==="map")content.innerHTML='<div class="muted">CITY MAP • TAP TO TRAVEL</div><div class="map">'+Object.keys(P).map(x=>'<div onclick="move(\''+x+'\')" class="place '+(x===S.loc?"here ":"")+(S.seen.includes(x)?"":"locked")+'"><b>'+P[x][0]+" "+x+'</b><br><span class="muted">'+(x===S.loc?"YOU ARE HERE":S.seen.includes(x)?"ROUTE KNOWN":"UNDISCOVERED")+"</span></div>").join("")+"</div>";
+if(tab==="bag")content.innerHTML='<div class="muted">BACKPACK</div>'+S.inv.map((x,i)=>'<div class="item"><b>'+x+'</b><button onclick="use('+i+')">USE</button></div>').join("");
+if(tab==="log")content.innerHTML='<div class="muted">SURVIVAL JOURNAL</div>'+S.log.map(x=>'<div class="entry">'+x+"</div>").join("");save();if(S.hp<=0){alert("You died. Refresh after clearing site data to restart.")}}
+render();
+</script></body></html>
